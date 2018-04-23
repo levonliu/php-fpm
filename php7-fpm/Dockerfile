@@ -2,7 +2,7 @@ FROM php:7.2.4-fpm-alpine3.6
 
 WORKDIR /var/www
 
-MAINTAINER 'Liu wen'
+MAINTAINER levonliu
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
