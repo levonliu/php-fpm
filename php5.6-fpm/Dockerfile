@@ -10,14 +10,22 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 #更新
 RUN apk update
 
-#安装对curl 和 png的支持
-RUN apk add curl-dev libpng libpng-dev m4 autoconf gcc g++ make
-
 #安装PHP扩展
-RUN docker-php-ext-install pdo_mysql bcmath curl gd mbstring opcache &&\
+RUN apk add --update --no-cache \
+    gettext tzdata icu-libs libpng libjpeg libcurl libintl libxml2 m4 autoconf gcc g++ make \
+    freetype ca-certificates > /dev/null
+
+RUN apk add --no-cache --virtual .module-deps \
+    icu-dev freetype-dev libjpeg-turbo-dev libmcrypt-dev libpng-dev \
+    $PHPIZE_DEPS \
+    zlib-dev curl-dev gettext-dev \
+    libxml2-dev libressl-dev > /dev/null && \
+    docker-php-ext-install gd intl mysql mysqli mbstring pdo_mysql curl exif gettext xmlrpc bcmath opcache pcntl && \
     pecl install redis-3.1.3 \
     &&  rm -rf /tmp/pear \
-    && docker-php-ext-enable redis
+    apk del .module-deps && \
+    rm -fr /tmp/src && \
+    rm -fr /var/cache/apk/*
 
 #yar
 RUN curl -fsSL 'http://pecl.php.net/get/yar-1.2.4.tgz' -o yar.tgz \
