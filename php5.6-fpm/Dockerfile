@@ -17,6 +17,7 @@ RUN apk add --no-cache --virtual .module-deps \
     zlib-dev curl-dev gettext-dev && \
     docker-php-ext-install gd intl mysql mysqli mbstring pdo_mysql curl exif gettext xmlrpc bcmath opcache pcntl && \
     pecl install redis-3.1.3 \
+    && docker-php-ext-enable redis \
     &&  rm -rf /tmp/pear \
     apk del .module-deps && \
     rm -fr /tmp/src && \
